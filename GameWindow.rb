@@ -26,7 +26,9 @@ class GameWindow < Gosu::Window
 
     @client = Net::Telnet.new('Host'=>'localhost', 'Port'=>7000, "Prompt"=>/^\+OK/n)
     @client.cmd("get_side"){ |str| @side = str.to_i}
+    @movement = @side == 1 ? true : false
     p @side
+    p @movement
 
   end
 
@@ -36,7 +38,7 @@ class GameWindow < Gosu::Window
         mouse_y = mouse_y()
         count_side_1 = @nard_side_1.get_count_nards_on_position(get_position_x(mouse_x), get_position_y(mouse_y))
         count_side_2 = @nard_side_2.get_count_nards_on_position(get_position_x(mouse_x), get_position_y(mouse_y))
-        if mouse_x > OFFSET_MIDDLE - 70 && mouse_x <= OFFSET_MIDDLE || mouse_x > WINDOW_SIZE_X - OFFSET_RIGHT
+        if mouse_x > OFFSET_MIDDLE - 70 && mouse_x <= OFFSET_MIDDLE || mouse_x > WINDOW_SIZE_X - OFFSET_RIGHT || !@movement
           return
         end
         if @side == 1
@@ -45,8 +47,12 @@ class GameWindow < Gosu::Window
           end
           if @nard_side_1.selected_nard? && count_side_2 == 0 && @nard_side_1.can_move_to_position(get_position_x(mouse_x), get_position_y(mouse_y), @count_movement)
             if @nard_side_1.move_selected_to_position(get_position_x(mouse_x), get_position_y(mouse_y))
-              @client.cmd("move_selected_to_position #{@side} #{get_position_x(mouse_x)} #{get_position_y(mouse_y)} #{@nard_side_1.selected_index}"){}
+              @client.cmd("move_selected_to_position #{@side} #{get_position_x(mouse_x)} #{get_position_y(mouse_y)} #{@nard_side_1.selected_index}")
               @nard_side_1.selected_index = -1
+              if @count_movement.empty?
+                sleep(0.1)
+                @client.cmd("your_movement #{@side}")
+              end
             end
           end
         else
@@ -55,8 +61,12 @@ class GameWindow < Gosu::Window
           end
           if @nard_side_2.selected_nard? && count_side_1 == 0 && @nard_side_2.can_move_to_position(get_position_x(mouse_x), get_position_y(mouse_y), @count_movement)
             if @nard_side_2.move_selected_to_position(get_position_x(mouse_x), get_position_y(mouse_y))
-              @client.cmd("move_selected_to_position #{@side} #{get_position_x(mouse_x)} #{get_position_y(mouse_y)} #{@nard_side_2.selected_index}"){}
+              @client.cmd("move_selected_to_position #{@side} #{get_position_x(mouse_x)} #{get_position_y(mouse_y)} #{@nard_side_2.selected_index}")
               @nard_side_2.selected_index = -1
+              if @count_movement.empty?
+                sleep(0.1)
+                @client.cmd("your_movement #{@side}")
+              end
             end
           end
         end
@@ -74,9 +84,8 @@ class GameWindow < Gosu::Window
     if !button_down?(Gosu::MsLeft) && @mouse_down == true
       @mouse_down = false
       return true
-    else
-      return false
     end
+    return false
   end
 
   def draw
@@ -88,14 +97,17 @@ class GameWindow < Gosu::Window
         @nard_side_1.move_selected_to_position(arg[0].to_i, arg[1].to_i, arg[2].to_i)
       end
     end
+    if cmd == "your_movement"
+      @movement = true
+    end
     @background_image.draw(0, 0, 0)
     @nard_side_1.draw
     @nard_side_2.draw
     @cursor.draw(mouse_x(), mouse_y(), 9999)
-    @roll.draw(230, 620, 0)
+    @roll.draw(230, 620, 0) if @movement
     if @bone_first && @bone_second
-      @bone_first.draw(50, 620, 0)
-      @bone_second.draw(120, 620, 0)
+      @bone_first.draw(50 * @side, 620, 0)
+      @bone_second.draw(120 * @side, 620, 0)
     end
   end
 

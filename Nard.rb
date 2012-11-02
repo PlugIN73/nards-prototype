@@ -147,13 +147,13 @@ class Nard
       count_movement.each{ |value|
         if position_y == 2
           if @nard_position_x_array[@selected_index] + value == position_x
+            count_movement.delete value
             return true
           end
         else
           temp = 12 - @nard_position_x_array[@selected_index]
-          p 12 - (value + temp)
-          p "temp = " + temp.to_s
           if 12 - value + temp + 1 == position_x
+            count_movement.delete value
             return true
           end
         end
