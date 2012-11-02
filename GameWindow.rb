@@ -43,7 +43,7 @@ class GameWindow < Gosu::Window
           if !@nard_side_1.selected_nard? && count_side_1 > 0
             @nard_side_1.select_nard(get_position_x(mouse_x), get_position_y(mouse_y))
           end
-          if @nard_side_1.selected_nard? && count_side_2 == 0 && can_move_to_position(get_position_x(mouse_x), get_position_y(mouse_y))
+          if @nard_side_1.selected_nard? && count_side_2 == 0 && @nard_side_1.can_move_to_position(get_position_x(mouse_x), get_position_y(mouse_y), @count_movement)
             if @nard_side_1.move_selected_to_position(get_position_x(mouse_x), get_position_y(mouse_y))
               @client.cmd("move_selected_to_position #{@side} #{get_position_x(mouse_x)} #{get_position_y(mouse_y)} #{@nard_side_1.selected_index}"){}
               @nard_side_1.selected_index = -1
@@ -53,7 +53,7 @@ class GameWindow < Gosu::Window
           if !@nard_side_2.selected_nard? && count_side_2 > 0
             @nard_side_2.select_nard(get_position_x(mouse_x), get_position_y(mouse_y))
           end
-          if @nard_side_2.selected_nard? && count_side_1 == 0
+          if @nard_side_2.selected_nard? && count_side_1 == 0 && @nard_side_2.can_move_to_position(get_position_x(mouse_x), get_position_y(mouse_y), @count_movement)
             if @nard_side_2.move_selected_to_position(get_position_x(mouse_x), get_position_y(mouse_y))
               @client.cmd("move_selected_to_position #{@side} #{get_position_x(mouse_x)} #{get_position_y(mouse_y)} #{@nard_side_2.selected_index}"){}
               @nard_side_2.selected_index = -1
@@ -68,7 +68,6 @@ class GameWindow < Gosu::Window
       if button_down?(Gosu::MsLeft) && 230 < mouse_x() && mouse_x() < 460  && 620 < mouse_y() && mouse_y() < 680
         roll
       end
-    p @count_movement
   end
 
   def mouseup?

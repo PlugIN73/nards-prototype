@@ -129,4 +129,36 @@ class Nard
       end
     }
   end
+
+  def can_move_to_position(position_x, position_y, count_movement)
+    if @nard_position_y_array[@selected_index] == 1
+      count_movement.each{ |value|
+        if position_y == 1
+          if @nard_position_x_array[@selected_index] - value == position_x
+            return true
+          end
+        else
+          if @nard_position_x_array[@selected_index] - 1 == value - position_x
+            return true
+          end
+        end
+      }
+    else
+      count_movement.each{ |value|
+        if position_y == 2
+          if @nard_position_x_array[@selected_index] + value == position_x
+            return true
+          end
+        else
+          temp = 12 - @nard_position_x_array[@selected_index]
+          p 12 - (value + temp)
+          p "temp = " + temp.to_s
+          if 12 - value + temp + 1 == position_x
+            return true
+          end
+        end
+      }
+    end
+    return false
+  end
 end
