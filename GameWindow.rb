@@ -38,34 +38,40 @@ class GameWindow < Gosu::Window
         mouse_y = mouse_y()
         count_side_1 = @nard_side_1.get_count_nards_on_position(get_position_x(mouse_x), get_position_y(mouse_y))
         count_side_2 = @nard_side_2.get_count_nards_on_position(get_position_x(mouse_x), get_position_y(mouse_y))
-        if mouse_x > OFFSET_MIDDLE - 70 && mouse_x <= OFFSET_MIDDLE || mouse_x > WINDOW_SIZE_X - OFFSET_RIGHT || !@movement
+        if mouse_x > OFFSET_MIDDLE - 70 && mouse_x <= OFFSET_MIDDLE || mouse_x > WINDOW_SIZE_X - OFFSET_RIGHT
           return
         end
-        if @side == 1
-          if !@nard_side_1.selected_nard? && count_side_1 > 0
-            @nard_side_1.select_nard(get_position_x(mouse_x), get_position_y(mouse_y))
-          end
-          if @nard_side_1.selected_nard? && count_side_2 == 0 && @nard_side_1.can_move_to_position(get_position_x(mouse_x), get_position_y(mouse_y), @count_movement)
-            if @nard_side_1.move_selected_to_position(get_position_x(mouse_x), get_position_y(mouse_y))
-              @client.cmd("move_selected_to_position #{@side} #{get_position_x(mouse_x)} #{get_position_y(mouse_y)} #{@nard_side_1.selected_index}")
-              @nard_side_1.selected_index = -1
-              if @count_movement.empty?
-                sleep(0.1)
-                @client.cmd("your_movement #{@side}")
+        unless !@movement
+          if @side == 1
+            if !@nard_side_1.selected_nard? && count_side_1 > 0
+              @nard_side_1.select_nard(get_position_x(mouse_x), get_position_y(mouse_y))
+            end
+            if @nard_side_1.selected_nard? && count_side_2 == 0 && @nard_side_1.can_move_to_position(get_position_x(mouse_x), get_position_y(mouse_y), @count_movement)
+              if @nard_side_1.move_selected_to_position(get_position_x(mouse_x), get_position_y(mouse_y))
+                @client.cmd("move_selected_to_position #{@side} #{get_position_x(mouse_x)} #{get_position_y(mouse_y)} #{@nard_side_1.selected_index}")
+                @nard_side_1.selected_index = -1
+
+                if @count_movement.empty?
+                  sleep(0.1)
+                  @client.cmd("your_movement #{@side}")
+                  @movement = false
+                end
               end
             end
-          end
-        else
-          if !@nard_side_2.selected_nard? && count_side_2 > 0
-            @nard_side_2.select_nard(get_position_x(mouse_x), get_position_y(mouse_y))
-          end
-          if @nard_side_2.selected_nard? && count_side_1 == 0 && @nard_side_2.can_move_to_position(get_position_x(mouse_x), get_position_y(mouse_y), @count_movement)
-            if @nard_side_2.move_selected_to_position(get_position_x(mouse_x), get_position_y(mouse_y))
-              @client.cmd("move_selected_to_position #{@side} #{get_position_x(mouse_x)} #{get_position_y(mouse_y)} #{@nard_side_2.selected_index}")
-              @nard_side_2.selected_index = -1
-              if @count_movement.empty?
-                sleep(0.1)
-                @client.cmd("your_movement #{@side}")
+          else
+            if !@nard_side_2.selected_nard? && count_side_2 > 0
+              @nard_side_2.select_nard(get_position_x(mouse_x), get_position_y(mouse_y))
+            end
+            if @nard_side_2.selected_nard? && count_side_1 == 0 && @nard_side_2.can_move_to_position(get_position_x(mouse_x), get_position_y(mouse_y), @count_movement)
+              if @nard_side_2.move_selected_to_position(get_position_x(mouse_x), get_position_y(mouse_y))
+                @client.cmd("move_selected_to_position #{@side} #{get_position_x(mouse_x)} #{get_position_y(mouse_y)} #{@nard_side_2.selected_index}")
+                @nard_side_2.selected_index = -1
+                p @count_movement
+                if @count_movement.empty?
+                  sleep(0.1)
+                  @client.cmd("your_movement #{@side}")
+                  @movement = false
+                end
               end
             end
           end
@@ -106,8 +112,8 @@ class GameWindow < Gosu::Window
     @cursor.draw(mouse_x(), mouse_y(), 9999)
     @roll.draw(230, 620, 0) if @movement
     if @bone_first && @bone_second
-      @bone_first.draw(50 * @side, 620, 0)
-      @bone_second.draw(120 * @side, 620, 0)
+      @bone_first.draw(50, 620, 0)
+      @bone_second.draw(120, 620, 0)
     end
   end
 

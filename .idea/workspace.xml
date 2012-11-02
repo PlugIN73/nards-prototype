@@ -19,19 +19,19 @@
   </component>
   <component name="FileEditorManager">
     <leaf>
-      <file leaf-file-name="GameWindow.rb" pinned="false" current="true" current-in-tab="true">
+      <file leaf-file-name="GameWindow.rb" pinned="false" current="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/GameWindow.rb">
           <provider selected="true" editor-type-id="text-editor">
-            <state line="52" column="25" selection-start="2192" selection-end="2192" vertical-scroll-proportion="0.98313254">
+            <state line="68" column="33" selection-start="3064" selection-end="3064" vertical-scroll-proportion="0.0">
               <folding />
             </state>
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="Nard.rb" pinned="false" current="false" current-in-tab="false">
+      <file leaf-file-name="Nard.rb" pinned="false" current="true" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/Nard.rb">
           <provider selected="true" editor-type-id="text-editor">
-            <state line="155" column="39" selection-start="4405" selection-end="4405" vertical-scroll-proportion="0.0">
+            <state line="142" column="39" selection-start="4039" selection-end="4039" vertical-scroll-proportion="0.45783132">
               <folding />
             </state>
           </provider>
@@ -58,8 +58,8 @@
       <list>
         <option value="$PROJECT_DIR$/main.rb" />
         <option value="$PROJECT_DIR$/Rectangle.rb" />
-        <option value="$PROJECT_DIR$/Nard.rb" />
         <option value="$PROJECT_DIR$/GameWindow.rb" />
+        <option value="$PROJECT_DIR$/Nard.rb" />
       </list>
     </option>
   </component>
@@ -264,7 +264,7 @@
       <window_info id="Debug" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.4" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
       <window_info id="Favorites" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="2" side_tool="true" content_ui="tabs" />
       <window_info id="Event Log" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.32318106" sideWeight="0.49722883" order="7" side_tool="true" content_ui="tabs" />
-      <window_info id="Run" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" weight="0.2962963" sideWeight="0.49722883" order="2" side_tool="false" content_ui="tabs" />
+      <window_info id="Run" active="true" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" weight="0.2962963" sideWeight="0.49722883" order="2" side_tool="false" content_ui="tabs" />
       <window_info id="Version Control" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
       <window_info id="Cvs" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.25" sideWeight="0.5" order="4" side_tool="false" content_ui="tabs" />
       <window_info id="Message" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="0" side_tool="false" content_ui="tabs" />
@@ -418,16 +418,16 @@
         <state line="351" column="83" selection-start="17017" selection-end="17017" vertical-scroll-proportion="2.090909" />
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/Nard.rb">
+    <entry file="file://$PROJECT_DIR$/GameWindow.rb">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="155" column="39" selection-start="4405" selection-end="4405" vertical-scroll-proportion="0.0">
+        <state line="68" column="33" selection-start="3064" selection-end="3064" vertical-scroll-proportion="0.0">
           <folding />
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/GameWindow.rb">
+    <entry file="file://$PROJECT_DIR$/Nard.rb">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="52" column="25" selection-start="2192" selection-end="2192" vertical-scroll-proportion="0.98313254">
+        <state line="142" column="39" selection-start="4039" selection-end="4039" vertical-scroll-proportion="0.45783132">
           <folding />
         </state>
       </provider>
