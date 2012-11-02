@@ -22,9 +22,12 @@ class GameWindow < Gosu::Window
     @rect = Rectangle.new(self,Gosu::Color::RED);
     @cursor = Gosu::Image.new(self, "images/cursor.png", true, 0, 0, 35, 35)
     @mouse_down = false
+    @count_movement = []
+
     @client = Net::Telnet.new('Host'=>'localhost', 'Port'=>7000, "Prompt"=>/^\+OK/n)
     @client.cmd("get_side"){ |str| @side = str.to_i}
     p @side
+
   end
 
   def update
@@ -40,7 +43,7 @@ class GameWindow < Gosu::Window
           if !@nard_side_1.selected_nard? && count_side_1 > 0
             @nard_side_1.select_nard(get_position_x(mouse_x), get_position_y(mouse_y))
           end
-          if @nard_side_1.selected_nard? && count_side_2 == 0
+          if @nard_side_1.selected_nard? && count_side_2 == 0 && can_move_to_position(get_position_x(mouse_x), get_position_y(mouse_y))
             if @nard_side_1.move_selected_to_position(get_position_x(mouse_x), get_position_y(mouse_y))
               @client.cmd("move_selected_to_position #{@side} #{get_position_x(mouse_x)} #{get_position_y(mouse_y)} #{@nard_side_1.selected_index}"){}
               @nard_side_1.selected_index = -1
@@ -65,14 +68,15 @@ class GameWindow < Gosu::Window
       if button_down?(Gosu::MsLeft) && 230 < mouse_x() && mouse_x() < 460  && 620 < mouse_y() && mouse_y() < 680
         roll
       end
+    p @count_movement
   end
 
   def mouseup?
     if !button_down?(Gosu::MsLeft) && @mouse_down == true
       @mouse_down = false
-      true
+      return true
     else
-      false
+      return false
     end
   end
 
@@ -111,14 +115,14 @@ class GameWindow < Gosu::Window
       mouse_x = mouse_x - 41
       i = i + 1
     end
-    i
+    return i
   end
 
   def get_position_y(mouse_y)
     if mouse_y >= WINDOW_SIZE_Y / 2 + OFFSET_BOTTOM
-      2
+      return 2
     else
-      1
+      return 1
     end
   end
 
@@ -127,7 +131,8 @@ class GameWindow < Gosu::Window
     second = rand(6) + 1
     @bone_first = Gosu::Image.new(self, "images/" + first.to_s + ".png", true, 0, 0, 60, 60)
     @bone_second = Gosu::Image.new(self, "images/" + second.to_s + ".png", true, 0, 0, 60, 60)
-
+    @count_movement.clear
+    @count_movement = [first, second]
   end
 end
 
