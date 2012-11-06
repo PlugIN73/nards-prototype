@@ -43,6 +43,9 @@ class GameWindow < Gosu::Window
         end
         unless !@movement
           if @side == 1
+            if @nard_side_1.all_in_home?
+              p "all_in_home!"
+            end
             if !@nard_side_1.selected_nard? && count_side_1 > 0
               @nard_side_1.select_nard(get_position_x(mouse_x), get_position_y(mouse_y))
             end
@@ -59,6 +62,9 @@ class GameWindow < Gosu::Window
               end
             end
           else
+            if @nard_side_2.all_in_home?
+              p "all_in_home!"
+            end
             if !@nard_side_2.selected_nard? && count_side_2 > 0
               @nard_side_2.select_nard(get_position_x(mouse_x), get_position_y(mouse_y))
             end

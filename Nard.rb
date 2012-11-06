@@ -3,6 +3,7 @@ class Nard
   attr_accessor :selected_index
   def initialize(window, side)
     @selected_index = -1
+    @side = side
     if side == 1
       @nard = Gosu::Image.new(window, "images/white-nard3.png", true, 0, 0, 35, 35)
       position_x = 1
@@ -15,14 +16,12 @@ class Nard
     @nard_x_array = {}
     @nard_y_array = {}
     @nard_lap_array = {}
-    @nard_side_array = {}
     @nard_position_x_array = {}
     @nard_position_y_array = {}
     15.times { |i|
       @nard_x_array[i] = get_x_position(position_x)
       @nard_y_array[i] = get_y_position(position_x, position_y)
       @nard_lap_array[i] = 0
-      @nard_side_array[i] = 1
       @nard_position_x_array[i] =  position_x
       @nard_position_y_array[i] = position_y
     }
@@ -101,10 +100,14 @@ class Nard
         @nard_x_array[@selected_index] = get_x_position(position_x)
         @nard_y_array[@selected_index] = get_y_position(position_x, position_y)
         @nard_position_x_array[@selected_index] = position_x
-        @nard_position_y_array[@selected_index] = position_y
+        if position_y != @nard_position_y_array[@selected_index]
+          @nard_position_y_array[@selected_index] = position_y
+          @nard_lap_array[@selected_index] += 1
+        end
         if position_y == 1
           recalculate_coords(position_x, position_y)
         end
+
         return true
       end
     else
@@ -130,17 +133,29 @@ class Nard
     }
   end
 
+  def all_in_home?
+    if @side == 1
+      @nard_position_y_array.each{|key, value| return false if value == 1}
+    else
+      @nard_position_y_array.each{|key, value| return false if value == 2}
+    end
+    p @nard_position_x_array
+    @nard_position_x_array.each{|key, value| return false if value < 7}
+    @nard_lap_array.each{|key, value| return false if value % 2 != 0}
+    return true
+  end
+
   def can_move_to_position(position_x, position_y, count_movement)
     if @nard_position_y_array[@selected_index] == 1
       count_movement.each{ |value|
         if position_y == 1
           if @nard_position_x_array[@selected_index] - value == position_x
-            count_movement.delete value
+            count_movement.delete_at count_movement.find_index value
             return true
           end
         else
           if @nard_position_x_array[@selected_index] - 1 == value - position_x
-            count_movement.delete value
+            count_movement.delete_at count_movement.find_index value
             return true
           end
         end
@@ -149,13 +164,13 @@ class Nard
       count_movement.each{ |value|
         if position_y == 2
           if @nard_position_x_array[@selected_index] + value == position_x
-            count_movement.delete value
+            count_movement.delete_at count_movement.find_index value
             return true
           end
         else
           temp = 12 - @nard_position_x_array[@selected_index]
           if 12 - value + temp + 1 == position_x
-            count_movement.delete value
+            count_movement.delete_at count_movement.find_index value
             return true
           end
         end
