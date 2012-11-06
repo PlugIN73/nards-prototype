@@ -17,15 +17,14 @@ class GameWindow < Gosu::Window
     self.caption = "Nards"
     @roll = Gosu::Image.new(self, "images/roll_active.png", true, 0, 0, 200, 60)
     @background_image = Gosu::Image.new(self, "images/bg.jpg", true, 0, 0, 620, 593)
-    @win = Gosu::Image.new(self, "images/win.png", true, 0, 0, 200, 100)
-    @lose = Gosu::Image.new(self, "images/lose.png", true, 0, 0, 200, 100)
+    @win_lose = Gosu::Image.new(self, "images/win.png", true, 0, 0, 0, 0)
     @nard_side_1 = Nard.new(self, 1)
     @nard_side_2 = Nard.new(self, 2)
     @rect = Rectangle.new(self,Gosu::Color::RED);
     @cursor = Gosu::Image.new(self, "images/cursor.png", true, 0, 0, 35, 35)
     @mouse_down = false
     @count_movement = []
-
+    @game_end = false
     @client = Net::Telnet.new('Host'=>'localhost', 'Port'=>7000, "Prompt"=>/^\+OK/n)
     @client.cmd("get_side"){ |str| @side = str.to_i}
     @movement = @side == 1 ? true : false
@@ -35,9 +34,23 @@ class GameWindow < Gosu::Window
   end
 
   def update
+    return if @game_end
     if button_down?(Gosu::MsRight)
       @nard_side_1.selected_index = -1
       @nard_side_1.selected_index = -1
+    end
+    if @side == 1
+      if @nard_side_1.win?
+        @win_lose = Gosu::Image.new(self, "images/win.png", true, 0, 0, 200, 100)
+        @client.cmd("you_lose #{@side}")
+        @game_end = true
+      end
+    else
+      if @nard_side_2.win?
+        @win_lose = Gosu::Image.new(self, "images/win.png", true, 0, 0, 200, 100)
+        @client.cmd("you_lose #{@side}")
+        @game_end = true
+      end
     end
     if mouseup?
       mouse_x = mouse_x()
@@ -52,12 +65,6 @@ class GameWindow < Gosu::Window
           if !@nard_side_1.all_in_home?
             if mouse_x > WINDOW_SIZE_X
               return
-            end
-          else
-            if @nard_side_1.win?
-              @win.draw(400, 620, 0)
-            else
-              @lose.draw(400, 620, 0)
             end
           end
           if !@nard_side_1.selected_nard? && count_side_1 > 0
@@ -134,15 +141,20 @@ class GameWindow < Gosu::Window
     if cmd == "your_movement"
       @movement = true
     end
+    if cmd == "you_lose"
+      @win_lose = Gosu::Image.new(self, "images/lose.png", true, 0, 0, 200, 100)
+      @game_end = true
+    end
     @background_image.draw(0, 0, 0)
     @nard_side_1.draw
     @nard_side_2.draw
     @cursor.draw(mouse_x(), mouse_y(), 9999)
-    @roll.draw(230, 620, 0) if @movement
-    if @bone_first && @bone_second
+    @roll.draw(230, 620, 0) if @movement && !@game_end
+    if @bone_first && @bone_second  && !@game_end
       @bone_first.draw(50, 620, 0)
       @bone_second.draw(120, 620, 0)
     end
+    @win_lose.draw(400, 620, 0)
   end
 
   def get_position_x(mouse_x)

@@ -22,7 +22,7 @@
       <file leaf-file-name="GameWindow.rb" pinned="false" current="true" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/GameWindow.rb">
           <provider selected="true" editor-type-id="text-editor">
-            <state line="40" column="10" selection-start="1289" selection-end="1289" vertical-scroll-proportion="0.16867469">
+            <state line="138" column="71" selection-start="5011" selection-end="5011" vertical-scroll-proportion="0.686747">
               <folding />
             </state>
           </provider>
@@ -31,7 +31,7 @@
       <file leaf-file-name="Nard.rb" pinned="false" current="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/Nard.rb">
           <provider selected="true" editor-type-id="text-editor">
-            <state line="24" column="28" selection-start="729" selection-end="729" vertical-scroll-proportion="0.0">
+            <state line="9" column="21" selection-start="267" selection-end="267" vertical-scroll-proportion="0.0">
               <folding />
             </state>
           </provider>
@@ -420,14 +420,14 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/Nard.rb">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="24" column="28" selection-start="729" selection-end="729" vertical-scroll-proportion="0.0">
+        <state line="9" column="21" selection-start="267" selection-end="267" vertical-scroll-proportion="0.0">
           <folding />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/GameWindow.rb">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="40" column="10" selection-start="1289" selection-end="1289" vertical-scroll-proportion="0.16867469">
+        <state line="138" column="71" selection-start="5011" selection-end="5011" vertical-scroll-proportion="0.686747">
           <folding />
         </state>
       </provider>

@@ -7,7 +7,7 @@ class Nard
     @side = side
     if side == 1
       @nard = Gosu::Image.new(window, "images/white-nard3.png", true, 0, 0, 35, 35)
-      position_x = 1
+      position_x = 13
       position_y = 2
     else
       @nard = Gosu::Image.new(window, "images/black-nard.png", true, 0, 0, 35, 35)
@@ -22,7 +22,7 @@ class Nard
     15.times { |i|
       @nard_x_array[i] = get_x_position(position_x)
       @nard_y_array[i] = get_y_position(position_x, position_y)
-      @nard_lap_array[i] = 0
+      @nard_lap_array[i] = 4
       @nard_position_x_array[i] =  position_x
       @nard_position_y_array[i] = position_y
     }
