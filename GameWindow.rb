@@ -2,7 +2,7 @@ gem 'gosu'
 require "gosu"
 require 'net/telnet'
 require "./Rectangle.rb"
-WINDOW_SIZE_X = 640
+WINDOW_SIZE_X = 620
 WINDOW_SIZE_Y = 593
 OFFSET_TOP = 10
 OFFSET_MIDDLE = WINDOW_SIZE_X / 2 + 25
@@ -16,7 +16,9 @@ class GameWindow < Gosu::Window
     super WINDOW_SIZE_X + 50, WINDOW_SIZE_Y + 100, false
     self.caption = "Nards"
     @roll = Gosu::Image.new(self, "images/roll_active.png", true, 0, 0, 200, 60)
-    @background_image = Gosu::Image.new(self, "images/bg.jpg", true, 0, 0, 640, 593)
+    @background_image = Gosu::Image.new(self, "images/bg.jpg", true, 0, 0, 620, 593)
+    @win = Gosu::Image.new(self, "images/win.png", true, 0, 0, 200, 100)
+    @lose = Gosu::Image.new(self, "images/lose.png", true, 0, 0, 200, 100)
     @nard_side_1 = Nard.new(self, 1)
     @nard_side_2 = Nard.new(self, 2)
     @rect = Rectangle.new(self,Gosu::Color::RED);
@@ -33,63 +35,83 @@ class GameWindow < Gosu::Window
   end
 
   def update
-      if mouseup?
-        mouse_x = mouse_x()
-        mouse_y = mouse_y()
-        count_side_1 = @nard_side_1.get_count_nards_on_position(get_position_x(mouse_x), get_position_y(mouse_y))
-        count_side_2 = @nard_side_2.get_count_nards_on_position(get_position_x(mouse_x), get_position_y(mouse_y))
-        if mouse_x > OFFSET_MIDDLE - 70 && mouse_x <= OFFSET_MIDDLE || mouse_x > WINDOW_SIZE_X - OFFSET_RIGHT
-          return
-        end
-        unless !@movement
-          if @side == 1
-            if @nard_side_1.all_in_home?
-              p "all_in_home!"
-            end
-            if !@nard_side_1.selected_nard? && count_side_1 > 0
-              @nard_side_1.select_nard(get_position_x(mouse_x), get_position_y(mouse_y))
-            end
-            if @nard_side_1.selected_nard? && count_side_2 == 0 && @nard_side_1.can_move_to_position(get_position_x(mouse_x), get_position_y(mouse_y), @count_movement)
-              if @nard_side_1.move_selected_to_position(get_position_x(mouse_x), get_position_y(mouse_y))
-                @client.cmd("move_selected_to_position #{@side} #{get_position_x(mouse_x)} #{get_position_y(mouse_y)} #{@nard_side_1.selected_index}")
-                @nard_side_1.selected_index = -1
-
-                if @count_movement.empty?
-                  sleep(0.1)
-                  @client.cmd("your_movement #{@side}")
-                  @movement = false
-                end
-              end
+    if button_down?(Gosu::MsRight)
+      @nard_side_1.selected_index = -1
+      @nard_side_1.selected_index = -1
+    end
+    if mouseup?
+      mouse_x = mouse_x()
+      mouse_y = mouse_y()
+      count_side_1 = @nard_side_1.get_count_nards_on_position(get_position_x(mouse_x), get_position_y(mouse_y))
+      count_side_2 = @nard_side_2.get_count_nards_on_position(get_position_x(mouse_x), get_position_y(mouse_y))
+      if mouse_x > OFFSET_MIDDLE - 70 && mouse_x <= OFFSET_MIDDLE || mouse_x > WINDOW_SIZE_X - OFFSET_RIGHT && mouse_x < WINDOW_SIZE_X
+        return
+      end
+      if @movement
+        if @side == 1
+          if !@nard_side_1.all_in_home?
+            if mouse_x > WINDOW_SIZE_X
+              return
             end
           else
-            if @nard_side_2.all_in_home?
-              p "all_in_home!"
+            if @nard_side_1.win?
+              @win.draw(400, 620, 0)
+            else
+              @lose.draw(400, 620, 0)
             end
-            if !@nard_side_2.selected_nard? && count_side_2 > 0
-              @nard_side_2.select_nard(get_position_x(mouse_x), get_position_y(mouse_y))
+          end
+          if !@nard_side_1.selected_nard? && count_side_1 > 0
+            @nard_side_1.select_nard(get_position_x(mouse_x), get_position_y(mouse_y))
+          end
+          if @nard_side_1.selected_nard? && count_side_2 == 0 && @nard_side_1.can_move_to_position(get_position_x(mouse_x), get_position_y(mouse_y), @count_movement)
+            if @nard_side_1.move_selected_to_position(get_position_x(mouse_x), get_position_y(mouse_y))
+              @client.cmd("move_selected_to_position #{@side} #{get_position_x(mouse_x)} #{get_position_y(mouse_y)} #{@nard_side_1.selected_index}")
+              @nard_side_1.selected_index = -1
+
+              if @count_movement.empty?
+                sleep(0.1)
+                @client.cmd("your_movement #{@side}")
+                @movement = false
+              end
             end
-            if @nard_side_2.selected_nard? && count_side_1 == 0 && @nard_side_2.can_move_to_position(get_position_x(mouse_x), get_position_y(mouse_y), @count_movement)
-              if @nard_side_2.move_selected_to_position(get_position_x(mouse_x), get_position_y(mouse_y))
-                @client.cmd("move_selected_to_position #{@side} #{get_position_x(mouse_x)} #{get_position_y(mouse_y)} #{@nard_side_2.selected_index}")
-                @nard_side_2.selected_index = -1
-                p @count_movement
-                if @count_movement.empty?
-                  sleep(0.1)
-                  @client.cmd("your_movement #{@side}")
-                  @movement = false
-                end
+          end
+        else
+          if !@nard_side_2.all_in_home?
+            if mouse_x > WINDOW_SIZE_X
+              return
+            end
+          else
+            if @nard_side_2.win?
+              @win.draw(400, 620, 0)
+            else
+              @lose.draw(400, 620, 0)
+            end
+          end
+          if !@nard_side_2.selected_nard? && count_side_2 > 0
+            @nard_side_2.select_nard(get_position_x(mouse_x), get_position_y(mouse_y))
+          end
+          if @nard_side_2.selected_nard? && count_side_1 == 0 && @nard_side_2.can_move_to_position(get_position_x(mouse_x), get_position_y(mouse_y), @count_movement)
+            if @nard_side_2.move_selected_to_position(get_position_x(mouse_x), get_position_y(mouse_y))
+              @client.cmd("move_selected_to_position #{@side} #{get_position_x(mouse_x)} #{get_position_y(mouse_y)} #{@nard_side_2.selected_index}")
+              @nard_side_2.selected_index = -1
+              p @count_movement
+              if @count_movement.empty?
+                sleep(0.1)
+                @client.cmd("your_movement #{@side}")
+                @movement = false
               end
             end
           end
         end
-      else
-        if button_down?(Gosu::MsLeft)
-          @mouse_down = true
-        end
       end
-      if button_down?(Gosu::MsLeft) && 230 < mouse_x() && mouse_x() < 460  && 620 < mouse_y() && mouse_y() < 680
-        roll
+    else
+      if button_down?(Gosu::MsLeft)
+        @mouse_down = true
       end
+    end
+    if button_down?(Gosu::MsLeft) && 230 < mouse_x() && mouse_x() < 460 && 620 < mouse_y() && mouse_y() < 680
+      roll
+    end
   end
 
   def mouseup?
@@ -124,8 +146,11 @@ class GameWindow < Gosu::Window
   end
 
   def get_position_x(mouse_x)
-    if mouse_x > OFFSET_MIDDLE - 70 && mouse_x <= OFFSET_MIDDLE || mouse_x > WINDOW_SIZE_X - OFFSET_RIGHT
+    if mouse_x > OFFSET_MIDDLE - 70 && mouse_x <= OFFSET_MIDDLE || mouse_x > WINDOW_SIZE_X - OFFSET_RIGHT && mouse_x < WINDOW_SIZE_X
       return 0
+    end
+    if mouse_x > WINDOW_SIZE_X
+      return 13
     end
     if mouse_x > OFFSET_MIDDLE
       i = 6
@@ -135,8 +160,8 @@ class GameWindow < Gosu::Window
       x = OFFSET_LEFT
     end
     while mouse_x > x
-      mouse_x = mouse_x - 41
-      i = i + 1
+      mouse_x -= 41
+      i += 1
     end
     return i
   end

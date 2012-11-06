@@ -1,6 +1,7 @@
 
 class Nard
-  attr_accessor :selected_index
+  attr_reader :selected_index
+  attr_writer :selected_index
   def initialize(window, side)
     @selected_index = -1
     @side = side
@@ -36,10 +37,13 @@ class Nard
   def get_x_position(position)
     if position > 6
       x = OFFSET_LEFT + 25
-      (position).times{x = x + 41}
+      (position).times{x += 41}
     else
       x = OFFSET_LEFT + 3
-      (position - 1).times{x = x + 41}
+      (position - 1).times{x += 41}
+    end
+    if position == 13
+      x += 38
     end
     return x
   end
@@ -139,9 +143,13 @@ class Nard
     else
       @nard_position_y_array.each{|key, value| return false if value == 2}
     end
-    p @nard_position_x_array
     @nard_position_x_array.each{|key, value| return false if value < 7}
     @nard_lap_array.each{|key, value| return false if value % 2 != 0}
+    return true
+  end
+
+  def win?
+    @nard_position_x_array.each{|key, value| return false if value != 13}
     return true
   end
 
