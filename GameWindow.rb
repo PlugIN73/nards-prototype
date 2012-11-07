@@ -28,8 +28,6 @@ class GameWindow < Gosu::Window
     @client = Net::Telnet.new('Host'=>'localhost', 'Port'=>7000, "Prompt"=>/^\+OK/n)
     @client.cmd("get_side"){ |str| @side = str.to_i}
     @movement = @side == 1 ? true : false
-    p @side
-    p @movement
 
   end
 
@@ -37,7 +35,7 @@ class GameWindow < Gosu::Window
     return if @game_end
     if button_down?(Gosu::MsRight)
       @nard_side_1.selected_index = -1
-      @nard_side_1.selected_index = -1
+      @nard_side_2.selected_index = -1
     end
     if @side == 1
       if @nard_side_1.win?
@@ -86,12 +84,6 @@ class GameWindow < Gosu::Window
           if !@nard_side_2.all_in_home?
             if mouse_x > WINDOW_SIZE_X
               return
-            end
-          else
-            if @nard_side_2.win?
-              @win.draw(400, 620, 0)
-            else
-              @lose.draw(400, 620, 0)
             end
           end
           if !@nard_side_2.selected_nard? && count_side_2 > 0
